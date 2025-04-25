@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image } from 'react-native';
-
+import * as Location from "expo-location"
 const Weather = () => {
     interface WeatherCondition {
         text: string;
@@ -41,18 +41,37 @@ const Weather = () => {
     }
 
     const [weather, setWeather] = useState<CurrentWeather>()
+    const [location, setLocation] = useState<Location.LocationObject | null>(null);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
     // http://api.weatherapi.com/v1/current.json?key=1863401e31784462a60170621252001&q=Faridabad&aqi=no
+    useEffect(() => {
+        async function getCurrentLocation() {
+
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                setErrorMsg('Permission to access location was denied');
+                return;
+            }
+
+            let location = await Location.getCurrentPositionAsync({});
+            setLocation(location);
+        }
+
+        getCurrentLocation();
+
+    }, [])
     useEffect(() => {
         const fetchData = async () => {
             const res = await fetch('http://api.weatherapi.com/v1/current.json?key=1863401e31784462a60170621252001&q=Faridabad&aqi=no');
-           
-            const  {current}  = await res.json()
+
+            const { current } = await res.json()
             // console.log(data,'DATA')
             setWeather(current)
 
         }
         fetchData()
-    },[])
+    }, [location])
     return (
         <View className="flex-1 bg-blue-100 items-center justify-center p-6">
             {/* City Name */}
