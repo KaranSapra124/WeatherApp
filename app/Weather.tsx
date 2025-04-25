@@ -39,6 +39,15 @@ const Weather = () => {
         gust_mph: number;
         gust_kph: number;
     }
+    interface Coords {
+        accuracy: Number | null;
+        altitude: Number | null;
+        altitudeAccuracy: Number | null;
+        heading: Number | null;
+        latitude: Number;
+        longitude: Number;
+        speed: Number | null;
+    }
 
     const [weather, setWeather] = useState<CurrentWeather>()
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
@@ -63,10 +72,9 @@ const Weather = () => {
     }, [])
     useEffect(() => {
         const fetchData = async () => {
-            const res = await fetch('http://api.weatherapi.com/v1/current.json?key=1863401e31784462a60170621252001&q=Faridabad&aqi=no');
-
+            const { latitude, longitude } = location?.coords as Coords
+            const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=1863401e31784462a60170621252001&q=${latitude},${longitude}&aqi=no`);
             const { current } = await res.json()
-            // console.log(data,'DATA')
             setWeather(current)
 
         }
