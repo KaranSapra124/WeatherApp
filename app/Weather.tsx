@@ -80,9 +80,11 @@ const Weather = () => {
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="bg-gradient-to-b from-blue-200 to-blue-50 p-6">
-            <View className="items-center justify-center mt-10">
+            <View className='flex  flex-row gap-2 items-center justify-start '>
                 <FontAwesome6 name="location-dot" size={24} color="#1e40af" iconStyle='solid' />
-                <Text className="text-4xl font-bold text-blue-900 mb-2">{city}</Text>
+                <Text className="text-3xl font-bold text-blue-900 ">{city}</Text>
+            </View>
+            <View className="items-center justify-center ">
                 <Image className="w-32 h-32" source={{ uri: "https:" + weather?.condition?.icon }} />
                 <Text className="text-6xl font-semibold text-blue-800">{weather?.temp_c}°C</Text>
                 <Text className="text-xl text-gray-700 mt-2">{weather?.condition?.text}</Text>
