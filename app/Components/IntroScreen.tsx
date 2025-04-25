@@ -17,6 +17,15 @@ const IntroScreen = () => {
                     statusBarAnimation: 'fade'
                 }}
             />
+                <Stack.Screen
+                options={{
+                    title: "Welcome",
+                    headerTintColor: "blue",
+                    headerTitleAlign: 'center',
+                    headerStyle: { backgroundColor: '#f1f5f9' }, // light gray
+                    statusBarAnimation: 'fade'
+                }}
+            />
 
             {/* Main Content */}
             <View className="flex-1 bg-white items-center justify-center px-4 relative">
