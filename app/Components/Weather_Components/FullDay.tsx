@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import { FontAwesome6, Feather } from '@expo/vector-icons';
+
 
 export interface AstroProps {
     sunrise: string;
@@ -16,20 +18,23 @@ const AstroInfo: React.FC<{ astroData: AstroProps | null }> = ({
     astroData
 }) => {
     return (
-        <View style={{ padding: 16, backgroundColor: '#fff', borderRadius: 12 }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>Astro Info</Text>
-
-            <Text>🌅 Sunrise: {astroData?.sunrise}</Text>
-            <Text>🌇 Sunset: {astroData?.sunset}</Text>
-
-            <Text>🌙 Moonrise: {astroData?.moonrise}</Text>
-            <Text>🌒 Moonset: {astroData?.moonset}</Text>
-
-            <Text>🌗 Moon Phase: {astroData?.moon_phase}</Text>
-            <Text>💡 Moon Illumination: {astroData?.moon_illumination}%</Text>
-
-            <Text>🌕 Moon Up: {astroData?.is_moon_up ? 'Yes' : 'No'}</Text>
-            <Text>☀️ Sun Up: {astroData?.is_sun_up ? 'Yes' : 'No'}</Text>
+        <View className='flex flex-row justify-center items-center my-6 w-full bg-white/50 gap-5 p-2 rounded'>
+            <View className='flex flex-col justify-center items-center'>
+                <Feather name="sunrise" size={16} color="#2563EB" iconStyle='solid' />
+                <Text className='my-1 font-semibold text-blue-900'>     {astroData?.sunrise}</Text>
+            </View>
+            <View className='flex flex-col justify-center items-center'>
+                <Feather name="sunset" size={16} color="#2563EB" iconStyle='solid' />
+                <Text className='my-1 font-semibold text-blue-900'>{astroData?.sunset}</Text>
+            </View>
+            <View className='flex flex-col justify-center items-center'>
+                <Feather name="moon" size={16} color="#2563EB" iconStyle='solid' />
+                <Text className='my-1 font-semibold text-blue-900'>{astroData?.moonrise}</Text>
+            </View>
+            <View className='flex flex-col justify-center items-center'>
+                <Feather name="sun" size={16} color="#2563EB" iconStyle='solid' />
+                <Text className='my-1 font-semibold text-blue-900'>{astroData?.moonset}</Text>
+            </View>
         </View>
     );
 };
