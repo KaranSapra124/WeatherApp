@@ -4,6 +4,7 @@ import * as Location from "expo-location";
 import { FontAwesome6 } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import AstroInfo, { AstroProps } from './Components/Weather_Components/FullDay';
+import Forecast, { WeatherForecast } from './Components/Weather_Components/Forecast';
 
 
 const Weather = () => {
@@ -26,7 +27,16 @@ const Weather = () => {
         longitude: number;
     }
     interface forecastday {
-        astro: any
+        date: string;
+
+        day: {
+            maxtemp_c: string;
+            mintemp_c: string;
+            condition: {
+                icon: string
+            }
+        };
+        astro: any;
     }
 
     interface WeatherAPIResponse {
@@ -39,11 +49,14 @@ const Weather = () => {
         }
     }
 
+
     const [weather, setWeather] = useState<CurrentWeather | null>(null);
     const [city, setCity] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(true);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
-    const [astro, setAstro] = useState<AstroProps | null>(null)
+    const [astro, setAstro] = useState<AstroProps | null>(null);
+    const [weatherForecast, setWeatherForecast] = useState<WeatherForecast[] | null | undefined>(null)
+
 
     useEffect(() => {
         (async () => {
@@ -58,11 +71,24 @@ const Weather = () => {
             const { latitude, longitude } = location.coords as Coords;
 
             try {
-                const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=1863401e31784462a60170621252001&q=${latitude},${longitude}&days=1&aqi=no&alerts=no`);
+                const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=1863401e31784462a60170621252001&q=${latitude},${longitude}&days=3&aqi=no&alerts=no`);
                 const data: WeatherAPIResponse = await res.json();
-                // console.log(data?.forecast)
+                // console.log(data?.forecast?.forecastday,"FORECAST")
+                const foreCast: WeatherForecast[] = data?.forecast?.forecastday
+                    ?.filter((_, index) => index !== 0)   // Pehle hi first element hata de
+                    .map((elem) => ({
+                        date: elem.date,
+                        icon: 'https:' + elem?.day?.condition?.icon,
+                        temp: {
+                            maxTemp: elem.day.maxtemp_c.toString(),
+                            minTemp: elem.day.mintemp_c.toString(),
+                        },
+                    }));
+
+                // console.log(foreCast, 'FORECAST')
                 setAstro(data?.forecast?.forecastday[0]?.astro)
                 setWeather(data.current);
+                setWeatherForecast(foreCast)
                 setCity(data.location.name);
             } catch (error) {
                 setErrorMsg("Failed to fetch weather data");
@@ -126,7 +152,8 @@ const Weather = () => {
                         <Text className="font-bold text-lg  text-blue-900">{weather?.pressure_mb} hPa</Text>
                     </View>
                 </View>
-                <AstroInfo astroData={astro } />
+                <AstroInfo astroData={astro} />
+                <Forecast data={weatherForecast} />
             </ScrollView>
 
         </>
