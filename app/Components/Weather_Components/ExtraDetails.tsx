@@ -12,7 +12,7 @@ const ExtraDetails: React.FC<{ details: details | null }> = ({ details }) => {
     // console.log(details)
     return (
         <>
-            <View className='flex flex-row my-2 justify-between items-center'>
+            <View className='flex flex-row my-6 justify-between items-center'>
                 <View className='shadow-lg bg-white/50 p-2 rounded w-24 h-22'>
                     <Feather name='sun' size={16} color="#2563EB" iconStyle='solid' />
                     <Text className='text-blue-900 font-bold text-md my-1'>UV</Text>
