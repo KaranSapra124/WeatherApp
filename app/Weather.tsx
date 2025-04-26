@@ -5,6 +5,7 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import AstroInfo, { AstroProps } from './Components/Weather_Components/FullDay';
 import Forecast, { WeatherForecast } from './Components/Weather_Components/Forecast';
+import ExtraDetails, { details } from './Components/Weather_Components/ExtraDetails';
 
 
 const Weather = () => {
@@ -43,10 +44,14 @@ const Weather = () => {
         location: {
             name: string;
         };
+
         current: CurrentWeather;
         forecast: {
             forecastday: forecastday[]
         }
+        uv: number;
+        feelslike_c: number;
+        humidity: number
     }
 
 
@@ -56,7 +61,7 @@ const Weather = () => {
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [astro, setAstro] = useState<AstroProps | null>(null);
     const [weatherForecast, setWeatherForecast] = useState<WeatherForecast[] | null | undefined>(null)
-
+    const [extraDetails, setExtraDetails] = useState<details | null>(null)
 
     useEffect(() => {
         (async () => {
@@ -86,6 +91,7 @@ const Weather = () => {
                     }));
 
                 // console.log(foreCast, 'FORECAST')
+                setExtraDetails({ uv: data?.uv, feelsLike: data?.feelslike_c, humidity: data?.humidity })
                 setAstro(data?.forecast?.forecastday[0]?.astro)
                 setWeather(data.current);
                 setWeatherForecast(foreCast)
@@ -154,6 +160,7 @@ const Weather = () => {
                 </View>
                 <AstroInfo astroData={astro} />
                 <Forecast data={weatherForecast} />
+                <ExtraDetails details={extraDetails} />
             </ScrollView>
 
         </>
