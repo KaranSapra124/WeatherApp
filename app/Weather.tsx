@@ -21,6 +21,8 @@ const Weather = () => {
         humidity: number;
         wind_kph: number;
         pressure_mb: number;
+        uv: number;
+        feelslike_c:number
     }
 
     interface Coords {
@@ -91,7 +93,8 @@ const Weather = () => {
                     }));
 
                 // console.log(foreCast, 'FORECAST')
-                setExtraDetails({ uv: data?.uv, feelsLike: data?.feelslike_c, humidity: data?.humidity })
+                // console.log(data.uv,'DATA')
+                setExtraDetails({ uv: data?.current?.uv, feelsLike: data?.current?.feelslike_c, humidity: data?.current?.humidity })
                 setAstro(data?.forecast?.forecastday[0]?.astro)
                 setWeather(data.current);
                 setWeatherForecast(foreCast)
