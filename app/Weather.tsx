@@ -22,7 +22,7 @@ const Weather = () => {
         wind_kph: number;
         pressure_mb: number;
         uv: number;
-        feelslike_c:number
+        feelslike_c: number
     }
 
     interface Coords {
@@ -142,7 +142,7 @@ const Weather = () => {
                     <Text className="text-xl font-medium text-blue-900 ">{city}</Text>
                 </View>
                 <View className="items-center justify-center my-8">
-                    <Text className="text-6xl font-medium text-blue-900">{weather?.temp_c}°C</Text>
+                    <Text className="text-[6rem] font-medium text-blue-900">{weather?.temp_c}°C</Text>
                     <Text className="text-2xl  text-gray-300 font-semibold mt-2">{weather?.condition?.text}</Text>
                     {/* <Image className="w-32 h-32" source={{ uri: "https:" + weather?.condition?.icon }} /> */}
                 </View>
