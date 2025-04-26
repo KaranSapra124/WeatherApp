@@ -14,7 +14,7 @@ const Forecast: React.FC<{ data: WeatherForecast[] | undefined | null }> = ({ da
     // console.log(data)
     return (
         <>
-            <View className='bg-white/50  p-2 rounded'>
+            <View className='bg-white/50 p-2 rounded'>
                 {/* <Text className='text-lg font-bold text-blue-900'>2 Days Forecast</Text> */}
                 {data?.map((elem, index) => {
                     const formatDate = (dateString: string) => {
