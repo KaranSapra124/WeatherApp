@@ -3,6 +3,7 @@ import { View, Text, Image, ActivityIndicator, ScrollView } from 'react-native';
 import * as Location from "expo-location";
 import { FontAwesome6 } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
+import AstroInfo, { AstroProps } from './Components/Weather_Components/FullDay';
 
 
 const Weather = () => {
@@ -24,18 +25,25 @@ const Weather = () => {
         latitude: number;
         longitude: number;
     }
+    interface forecastday {
+        astro: any
+    }
 
     interface WeatherAPIResponse {
         location: {
             name: string;
         };
         current: CurrentWeather;
+        forecast: {
+            forecastday: forecastday[]
+        }
     }
 
     const [weather, setWeather] = useState<CurrentWeather | null>(null);
     const [city, setCity] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(true);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [astro, setAstro] = useState<AstroProps | null>(null)
 
     useEffect(() => {
         (async () => {
@@ -50,8 +58,10 @@ const Weather = () => {
             const { latitude, longitude } = location.coords as Coords;
 
             try {
-                const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=1863401e31784462a60170621252001&q=${latitude},${longitude}&aqi=no`);
+                const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=1863401e31784462a60170621252001&q=${latitude},${longitude}&days=1&aqi=no&alerts=no`);
                 const data: WeatherAPIResponse = await res.json();
+                // console.log(data?.forecast)
+                setAstro(data?.forecast?.forecastday[0]?.astro)
                 setWeather(data.current);
                 setCity(data.location.name);
             } catch (error) {
@@ -116,6 +126,7 @@ const Weather = () => {
                         <Text className="font-bold text-lg  text-blue-900">{weather?.pressure_mb} hPa</Text>
                     </View>
                 </View>
+                <AstroInfo astroData={astro } />
             </ScrollView>
 
         </>
