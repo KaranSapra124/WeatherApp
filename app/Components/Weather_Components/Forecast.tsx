@@ -14,23 +14,24 @@ const Forecast: React.FC<{ data: WeatherForecast[] | undefined | null }> = ({ da
     // console.log(data)
     return (
         <>
-            <View>
+            <View className='bg-white/50  p-2 rounded'>
+                {/* <Text className='text-lg font-bold text-blue-900'>2 Days Forecast</Text> */}
                 {data?.map((elem, index) => {
                     const formatDate = (dateString: string) => {
                         const dateObj = new Date(dateString);
                         const formatter = new Intl.DateTimeFormat('en-GB', {
-                          day: 'numeric',
-                          month: 'long',
+                            day: 'numeric',
+                            month: 'long',
                         });
                         return formatter.format(dateObj); // Example: "28 April"
-                      };
+                    };
                     // const newDate = new Date(elem?.date).getDate().toLocaleString('default', { month: 'long' })
-                    return <View key={index}>
-                        <Text> {formatDate(elem?.date)}</Text>
-                        <Image src={elem?.icon} alt='No Image' className='h-20 w-20' />
+                    return <View key={index} className='flex flex-row justify-between items-center'>
+                        <Text className='text-lg font-semibold text-blue-900'> {formatDate(elem?.date)}</Text>
+                        <Image src={elem?.icon} alt='No Image' className='h-16 w-16' />
                         <View className='flex flex-row gap-0.5 font-bold'>
-                            <Text>{Math.ceil(+elem?.temp?.maxTemp)}/</Text>
-                            <Text>{Math.ceil(+elem?.temp?.minTemp)}</Text>
+                            <Text className='text-lg font-semibold text-blue-900'>{Math.ceil(+elem?.temp?.maxTemp)}/</Text>
+                            <Text className='text-lg font-semibold text-blue-900'>{Math.ceil(+elem?.temp?.minTemp)}</Text>
                         </View>
                     </View>
                 })}
