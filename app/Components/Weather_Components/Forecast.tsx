@@ -28,7 +28,7 @@ const Forecast: React.FC<{ data: WeatherForecast[] | undefined | null }> = ({ da
                     // const newDate = new Date(elem?.date).getDate().toLocaleString('default', { month: 'long' })
                     return <View key={index} className='flex flex-row justify-between items-center'>
                         <Text className='text-lg font-semibold text-blue-900'> {formatDate(elem?.date)}</Text>
-                        <Image src={elem?.icon} alt='No Image' className='h-16 w-16' />
+                        <Image src={elem?.icon} alt='No Image' className='h-12 w-12' />
                         <View className='flex flex-row gap-0.5 font-bold'>
                             <Text className='text-lg font-semibold text-blue-900'>{Math.ceil(+elem?.temp?.maxTemp)}/</Text>
                             <Text className='text-lg font-semibold text-blue-900'>{Math.ceil(+elem?.temp?.minTemp)}</Text>
