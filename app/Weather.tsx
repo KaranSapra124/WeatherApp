@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, Image, ActivityIndicator, ScrollView, TextInput, Button } from 'react-native';
 import * as Location from "expo-location";
 import { FontAwesome6 } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
@@ -59,14 +59,53 @@ const Weather = () => {
 
     const [weather, setWeather] = useState<CurrentWeather | null>(null);
     const [city, setCity] = useState<string>("");
+    const [userCity, setUserCity] = useState('');
+
     const [loading, setLoading] = useState<boolean>(true);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [astro, setAstro] = useState<AstroProps | null>(null);
     const [weatherForecast, setWeatherForecast] = useState<WeatherForecast[] | null | undefined>(null)
     const [extraDetails, setExtraDetails] = useState<details | null>(null)
+    const handleCitySearch = async () => {
+        setLoading(true);
+        if (!userCity) return;
+        console.log(userCity)
 
+        try {
+            const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=1863401e31784462a60170621252001&q=${userCity}&days=3&aqi=no&alerts=no`);
+            const data: WeatherAPIResponse = await res.json();
+            // Extract forecast data
+            const foreCast: WeatherForecast[] = data?.forecast?.forecastday
+                ?.filter((_, index) => index !== 0)   // Filter out the first element
+                .map((elem) => ({
+                    date: elem.date,
+                    icon: 'https:' + elem?.day?.condition?.icon,
+                    temp: {
+                        maxTemp: elem.day.maxtemp_c.toString(),
+                        minTemp: elem.day.mintemp_c.toString(),
+                    },
+                }));
+
+            // Set weather data and extra details in state
+            setExtraDetails({ uv: data?.current?.uv, feelsLike: data?.current?.feelslike_c, humidity: data?.current?.humidity });
+            setAstro(data?.forecast?.forecastday[0]?.astro);
+            setWeather(data.current);
+            setWeatherForecast(foreCast);
+            setCity(data.location.name);
+            setErrorMsg(null)
+
+        } catch (error) {
+            console.log(error, "ERRORORO")
+            setErrorMsg('Failed to fetch weather data');
+        }
+        finally {
+            setLoading(false)
+        }
+    };
     useEffect(() => {
+        // console.log('hello')
         (async () => {
+            // console.log("USEEFFECT")
             try {
                 // Check current permission status only once
                 const { status } = await Location.getForegroundPermissionsAsync();
@@ -127,14 +166,19 @@ const Weather = () => {
     }
 
     if (errorMsg) {
-        console.log(errorMsg)
         return (
             <View className="flex-1 items-center justify-center bg-red-100 px-6">
-                <Text className="text-red-700 font-semibold text-lg">Please Turn On Location!</Text>
+                <Text className="text-red-700 font-semibold text-lg">{errorMsg}</Text>
+                <TextInput
+                    className="mt-4 p-2 border-b border-gray-500"
+                    placeholder="Enter city name"
+                    value={userCity}
+                    onChangeText={setUserCity}
+                />
+                <Button title="Search" onPress={handleCitySearch} />
             </View>
         );
     }
-
     return (
         <>
 
