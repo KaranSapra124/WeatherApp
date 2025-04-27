@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ActivityIndicator, ScrollView, TextInput, Button } from 'react-native';
+import { View, Text, Image, ActivityIndicator, ScrollView, TextInput, Button, TouchableOpacity } from 'react-native';
 import * as Location from "expo-location";
 import { FontAwesome6 } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
@@ -167,15 +167,20 @@ const Weather = () => {
 
     if (errorMsg) {
         return (
-            <View className="flex-1 items-center justify-center bg-red-100 px-6">
-                <Text className="text-red-700 font-semibold text-lg">{errorMsg}</Text>
+            <View className="flex-1 items-center justify-center bg-blue-50 p-6">
+                <Text className="text-red-500 text-xl font-semibold mb-4">{errorMsg}</Text>
                 <TextInput
-                    className="mt-4 p-2 border-b border-gray-500"
+                    className="w-4/5 h-12 px-4 mb-4 border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter city name"
                     value={userCity}
                     onChangeText={setUserCity}
                 />
-                <Button title="Search" onPress={handleCitySearch} />
+                <TouchableOpacity
+                    className="bg-blue-500 text-white py-2 px-6 rounded-lg shadow-md"
+                    onPress={handleCitySearch}
+                >
+                    <Text className="text-lg font-semibold text-white ">Search</Text>
+                </TouchableOpacity>
             </View>
         );
     }
