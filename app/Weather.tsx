@@ -67,22 +67,32 @@ const Weather = () => {
 
     useEffect(() => {
         (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                setErrorMsg('Location permission denied');
-                setLoading(false);
-                return;
-            }
-
-            let location = await Location.getCurrentPositionAsync({});
-            const { latitude, longitude } = location.coords as Coords;
-
             try {
+                // Check current permission status only once
+                const { status } = await Location.getForegroundPermissionsAsync();
+                // console.log(status, 'STATUS');
+
+                // If permission is not granted, request it
+                if (status !== 'granted') {
+                    const { status: newStatus } = await Location.requestForegroundPermissionsAsync();
+                    if (newStatus !== 'granted') {
+                        setErrorMsg('Location permission denied');
+                        setLoading(false);
+                        return; // If denied, exit early
+                    }
+                }
+
+                // Fetch current location once permission is granted
+                let location = await Location.getCurrentPositionAsync({});
+                const { latitude, longitude } = location.coords as Coords;
+
+                // Fetch weather data using the latitude and longitude
                 const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=1863401e31784462a60170621252001&q=${latitude},${longitude}&days=3&aqi=no&alerts=no`);
                 const data: WeatherAPIResponse = await res.json();
-                // console.log(data?.forecast?.forecastday,"FORECAST")
+
+                // Extract forecast data
                 const foreCast: WeatherForecast[] = data?.forecast?.forecastday
-                    ?.filter((_, index) => index !== 0)   // Pehle hi first element hata de
+                    ?.filter((_, index) => index !== 0)   // Filter out the first element
                     .map((elem) => ({
                         date: elem.date,
                         icon: 'https:' + elem?.day?.condition?.icon,
@@ -92,12 +102,11 @@ const Weather = () => {
                         },
                     }));
 
-                // console.log(foreCast, 'FORECAST')
-                // console.log(data.uv,'DATA')
-                setExtraDetails({ uv: data?.current?.uv, feelsLike: data?.current?.feelslike_c, humidity: data?.current?.humidity })
-                setAstro(data?.forecast?.forecastday[0]?.astro)
+                // Set weather data and extra details in state
+                setExtraDetails({ uv: data?.current?.uv, feelsLike: data?.current?.feelslike_c, humidity: data?.current?.humidity });
+                setAstro(data?.forecast?.forecastday[0]?.astro);
                 setWeather(data.current);
-                setWeatherForecast(foreCast)
+                setWeatherForecast(foreCast);
                 setCity(data.location.name);
             } catch (error) {
                 setErrorMsg("Failed to fetch weather data");
@@ -105,21 +114,23 @@ const Weather = () => {
                 setLoading(false);
             }
         })();
-    }, []);
+    }, []); // Empty dependency array ensures this effect runs only once when the component mounts
+
 
     if (loading) {
         return (
             <View className="flex-1 bg-blue-100 items-center justify-center">
-                <ActivityIndicator size="large" color="#1e3a8a" />
+                <FontAwesome6 name="cloud" iconStyle="solid" color="#2563EB" size={40} />
                 <Text className="mt-4 text-blue-800 font-medium">Fetching weather...</Text>
             </View>
         );
     }
 
     if (errorMsg) {
+        console.log(errorMsg)
         return (
             <View className="flex-1 items-center justify-center bg-red-100 px-6">
-                <Text className="text-red-700 font-semibold text-lg">{errorMsg}</Text>
+                <Text className="text-red-700 font-semibold text-lg">Please Turn On Location!</Text>
             </View>
         );
     }
