@@ -148,7 +148,7 @@ const Weather = () => {
                 setWeatherForecast(foreCast);
                 setCity(data.location.name);
             } catch (error) {
-                setErrorMsg("Failed to fetch weather data");
+                setErrorMsg("Enter the location:");
             } finally {
                 setLoading(false);
             }
@@ -167,8 +167,8 @@ const Weather = () => {
 
     if (errorMsg) {
         return (
-            <View className="flex-1 items-center justify-center bg-blue-50 p-6">
-                <Text className="text-red-500 text-xl font-semibold mb-4">{errorMsg}</Text>
+            <View className="flex-1 items-center justify-center bg-blue-100 p-6">
+                <Text className="text-blue-900 text-xl font-semibold mb-4">{errorMsg}</Text>
                 <TextInput
                     className="w-4/5 h-12 px-4 mb-4 border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter city name"
